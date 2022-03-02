@@ -1,5 +1,3 @@
-import styles from '../styles/Container.module.scss';
-
 interface ContainerProps {
   children: JSX.Element;
 }

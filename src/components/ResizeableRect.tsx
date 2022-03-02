@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect } from 'react';
-import styles from '../styles/ResizeableRect.module.scss';
 
 const ResizeableRect = () => {
   const [position, setPosition] = useState({ top: 0, left: 0 });

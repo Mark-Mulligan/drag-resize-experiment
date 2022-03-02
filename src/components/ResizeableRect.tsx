@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import styles from '../styles/ResizeableRect.module.scss';
 
 const ResizeableRect = () => {
@@ -8,31 +8,32 @@ const ResizeableRect = () => {
 
   const handleDrag = useCallback(
     (e: MouseEvent) => {
-      let xDiff = e.screenX - mouseStartingPos.x;
-      let yDiff = e.screenY - mouseStartingPos.y;
+      if (isDragging) {
+        let xDiff = e.screenX - mouseStartingPos.x;
+        let yDiff = e.screenY - mouseStartingPos.y;
 
-      console.log(mouseStartingPos.x);
-
-      const lastPosition = { ...position };
-      setPosition({ top: lastPosition.top + yDiff, left: lastPosition.left + xDiff });
-      //console.log(e.screenX, e.screenY);
+        const lastPosition = { ...position };
+        setPosition({ top: lastPosition.top + yDiff, left: lastPosition.left + xDiff });
+      }
     },
-    [mouseStartingPos.x, mouseStartingPos.y],
+    [mouseStartingPos.x, mouseStartingPos.y, isDragging],
   );
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     setMouseStartingPos({ x: e.screenX, y: e.screenY });
     setIsDragging(true);
-
-    window.addEventListener('mousemove', handleDrag);
   };
 
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
     console.log(e);
     setIsDragging(false);
-
-    window.removeEventListener('mousemove', handleDrag);
   };
+
+  useEffect(() => {
+    window.addEventListener('mousemove', handleDrag);
+
+    return () => window.removeEventListener('mousemove', handleDrag);
+  }, [handleDrag]);
 
   return (
     <div

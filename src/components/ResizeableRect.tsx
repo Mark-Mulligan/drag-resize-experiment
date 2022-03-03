@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 const ResizeableRect = () => {
   const [position, setPosition] = useState({ top: 20, left: 20 });
@@ -24,7 +24,6 @@ const ResizeableRect = () => {
   };
 
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
-    console.log(e);
     setIsDragging(false);
   };
 

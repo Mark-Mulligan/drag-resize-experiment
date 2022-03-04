@@ -27,6 +27,10 @@ const ResizeableRect = () => {
     setIsDragging(false);
   };
 
+  const handleBottomLeftCornerClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+  };
+
   useEffect(() => {
     window.addEventListener('mousemove', handleDrag);
 
@@ -81,6 +85,8 @@ const ResizeableRect = () => {
         }}
       />
       <div
+        className="cornerResize"
+        onMouseDown={(e) => handleBottomLeftCornerClick(e)}
         style={{
           position: 'absolute',
           bottom: -6,

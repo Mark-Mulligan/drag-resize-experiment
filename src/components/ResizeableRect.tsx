@@ -2,20 +2,27 @@ import React, { useState, useCallback, useEffect } from 'react';
 
 const ResizeableRect = () => {
   const [position, setPosition] = useState({ top: 20, left: 20 });
+  const [rectDimensions, setRectDimensions] = useState({ height: 100, width: 200 });
   const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
   const [mouseStartingPos, setMouseStartingPos] = useState({ x: 0, y: 0 });
 
   const handleDrag = useCallback(
     (e: MouseEvent) => {
-      if (isDragging) {
+      if (isDragging || isResizing) {
         let xDiff = e.screenX - mouseStartingPos.x;
         let yDiff = e.screenY - mouseStartingPos.y;
 
-        const lastPosition = { ...position };
-        setPosition({ top: lastPosition.top + yDiff, left: lastPosition.left + xDiff });
+        if (isDragging) {
+          const lastPosition = { ...position };
+          setPosition({ top: lastPosition.top + yDiff, left: lastPosition.left + xDiff });
+        } else if (isResizing) {
+          const lastDimensions = { ...rectDimensions };
+          setRectDimensions({ height: lastDimensions.height + yDiff, width: lastDimensions.width + xDiff });
+        }
       }
     },
-    [mouseStartingPos.x, mouseStartingPos.y, isDragging],
+    [mouseStartingPos.x, mouseStartingPos.y, isDragging, isResizing],
   );
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -27,8 +34,15 @@ const ResizeableRect = () => {
     setIsDragging(false);
   };
 
-  const handleBottomLeftCornerClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleCornerClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
+    setMouseStartingPos({ x: e.screenX, y: e.screenY });
+    setIsResizing(true);
+  };
+
+  const handleCornerRelease = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    setIsResizing(false);
   };
 
   useEffect(() => {
@@ -44,8 +58,8 @@ const ResizeableRect = () => {
         position: 'absolute',
         top: position.top,
         left: position.left,
-        height: 100,
-        width: 200,
+        height: rectDimensions.height,
+        width: rectDimensions.width,
         border: '2px solid green',
       }}
       onMouseDown={(e) => handleMouseDown(e)}
@@ -86,7 +100,8 @@ const ResizeableRect = () => {
       />
       <div
         className="cornerResize"
-        onMouseDown={(e) => handleBottomLeftCornerClick(e)}
+        onMouseDown={(e) => handleCornerClick(e)}
+        onMouseUp={(e) => handleCornerRelease(e)}
         style={{
           position: 'absolute',
           bottom: -6,

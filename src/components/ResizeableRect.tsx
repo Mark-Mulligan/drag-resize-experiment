@@ -66,6 +66,9 @@ const ResizeableRect = () => {
       onMouseUp={(e) => handleMouseUp(e)}
     >
       <div
+        className="topLeftBottomRightResize"
+        onMouseDown={(e) => handleCornerClick(e)}
+        onMouseUp={(e) => handleCornerRelease(e)}
         style={{
           position: 'absolute',
           top: -6,
@@ -99,7 +102,7 @@ const ResizeableRect = () => {
         }}
       />
       <div
-        className="cornerResize"
+        className="topLeftBottomRightResize"
         onMouseDown={(e) => handleCornerClick(e)}
         onMouseUp={(e) => handleCornerRelease(e)}
         style={{

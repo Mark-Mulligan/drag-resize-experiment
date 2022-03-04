@@ -30,6 +30,10 @@ code {
   cursor: grabbing;
 }
 
-.cornerResize {
-  cursor: se-resize;
+.topLeftBottomRightResize {
+  cursor: nwse-resize;
+}
+
+.bottomLeftTopRightResize {
+  cursor: nesw-resize;
 }

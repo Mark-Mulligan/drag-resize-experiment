@@ -17,12 +17,16 @@ const ResizeableRect = () => {
           const lastPosition = { ...position };
           setPosition({ top: lastPosition.top + yDiff, left: lastPosition.left + xDiff });
         } else if (resizeType === 'bottomRight') {
-          const lastDimensions = { ...rectDimensions };
-          setRectDimensions({ height: lastDimensions.height + yDiff, width: lastDimensions.width + xDiff });
+          setRectDimensions({ height: rectDimensions.height + yDiff, width: rectDimensions.width + xDiff });
         } else if (resizeType === 'topLeft') {
-          const lastDimensions = { ...rectDimensions };
-          setRectDimensions({ height: lastDimensions.height - yDiff, width: lastDimensions.width - xDiff });
+          setRectDimensions({ height: rectDimensions.height - yDiff, width: rectDimensions.width - xDiff });
           setPosition({ top: position.top + yDiff, left: position.left + xDiff });
+        } else if (resizeType === 'topRight') {
+          setRectDimensions({ height: rectDimensions.height - yDiff, width: rectDimensions.width + xDiff });
+          setPosition({ top: position.top + yDiff, left: position.left });
+        } else if (resizeType === 'bottomLeft') {
+          setRectDimensions({ height: rectDimensions.height + yDiff, width: rectDimensions.width - xDiff });
+          setPosition({ top: position.top, left: position.left + xDiff });
         }
       }
     },
@@ -84,6 +88,9 @@ const ResizeableRect = () => {
         }}
       />
       <div
+        className="bottomLeftTopRightResize"
+        onMouseDown={(e) => handleResize(e, 'topRight')}
+        onMouseUp={(e) => handleCornerRelease(e)}
         style={{
           position: 'absolute',
           top: -6,
@@ -95,6 +102,9 @@ const ResizeableRect = () => {
         }}
       />
       <div
+        className="bottomLeftTopRightResize"
+        onMouseDown={(e) => handleResize(e, 'bottomLeft')}
+        onMouseUp={(e) => handleCornerRelease(e)}
         style={{
           position: 'absolute',
           bottom: -6,

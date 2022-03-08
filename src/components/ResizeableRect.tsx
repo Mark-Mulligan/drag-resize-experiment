@@ -19,6 +19,10 @@ const ResizeableRect = () => {
         } else if (resizeType === 'bottomRight') {
           const lastDimensions = { ...rectDimensions };
           setRectDimensions({ height: lastDimensions.height + yDiff, width: lastDimensions.width + xDiff });
+        } else if (resizeType === 'topLeft') {
+          const lastDimensions = { ...rectDimensions };
+          setRectDimensions({ height: lastDimensions.height - yDiff, width: lastDimensions.width - xDiff });
+          setPosition({ top: position.top + yDiff, left: position.left + xDiff });
         }
       }
     },

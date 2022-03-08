@@ -4,25 +4,25 @@ const ResizeableRect = () => {
   const [position, setPosition] = useState({ top: 20, left: 20 });
   const [rectDimensions, setRectDimensions] = useState({ height: 100, width: 200 });
   const [isDragging, setIsDragging] = useState(false);
-  const [isResizing, setIsResizing] = useState(false);
+  const [resizeType, setResizeType] = useState('');
   const [mouseStartingPos, setMouseStartingPos] = useState({ x: 0, y: 0 });
 
   const handleDrag = useCallback(
     (e: MouseEvent) => {
-      if (isDragging || isResizing) {
+      if (isDragging || resizeType) {
         let xDiff = e.screenX - mouseStartingPos.x;
         let yDiff = e.screenY - mouseStartingPos.y;
 
         if (isDragging) {
           const lastPosition = { ...position };
           setPosition({ top: lastPosition.top + yDiff, left: lastPosition.left + xDiff });
-        } else if (isResizing) {
+        } else if (resizeType === 'bottomRight') {
           const lastDimensions = { ...rectDimensions };
           setRectDimensions({ height: lastDimensions.height + yDiff, width: lastDimensions.width + xDiff });
         }
       }
     },
-    [mouseStartingPos.x, mouseStartingPos.y, isDragging, isResizing],
+    [mouseStartingPos.x, mouseStartingPos.y, isDragging, resizeType],
   );
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -34,15 +34,15 @@ const ResizeableRect = () => {
     setIsDragging(false);
   };
 
-  const handleCornerClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleResize = (e: React.MouseEvent<HTMLDivElement>, resizeName: string) => {
     e.stopPropagation();
     setMouseStartingPos({ x: e.screenX, y: e.screenY });
-    setIsResizing(true);
+    setResizeType(resizeName);
   };
 
   const handleCornerRelease = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    setIsResizing(false);
+    setResizeType('');
   };
 
   useEffect(() => {
@@ -67,7 +67,7 @@ const ResizeableRect = () => {
     >
       <div
         className="topLeftBottomRightResize"
-        onMouseDown={(e) => handleCornerClick(e)}
+        onMouseDown={(e) => handleResize(e, 'topLeft')}
         onMouseUp={(e) => handleCornerRelease(e)}
         style={{
           position: 'absolute',
@@ -103,7 +103,7 @@ const ResizeableRect = () => {
       />
       <div
         className="topLeftBottomRightResize"
-        onMouseDown={(e) => handleCornerClick(e)}
+        onMouseDown={(e) => handleResize(e, 'bottomRight')}
         onMouseUp={(e) => handleCornerRelease(e)}
         style={{
           position: 'absolute',

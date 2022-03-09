@@ -14,8 +14,7 @@ const ResizeableRect = () => {
         let yDiff = e.screenY - mouseStartingPos.y;
 
         if (isDragging) {
-          const lastPosition = { ...position };
-          setPosition({ top: lastPosition.top + yDiff, left: lastPosition.left + xDiff });
+          setPosition({ top: position.top + yDiff, left: position.left + xDiff });
         } else if (resizeType === 'bottomRight') {
           setRectDimensions({ height: rectDimensions.height + yDiff, width: rectDimensions.width + xDiff });
         } else if (resizeType === 'topLeft') {
